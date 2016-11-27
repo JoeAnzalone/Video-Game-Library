@@ -1,7 +1,5 @@
 <?php
 
-use \App\GiantBombHelper;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,8 +16,15 @@ Route::get('/', function () {
 });
 
 Route::get('/cover/{game}', function ($game_name) {
-    $platforms = [GiantBombHelper::PLATFORM_PLAYSTATION, GiantBombHelper::PLATFORM_PLAYSTATION_2];
-    $game_images = GiantBombHelper::getGameImage($game_name, $platforms);
+    $game_name = str_replace('+', ' ', $game_name);
+
+    $platforms = [
+        // \App\GiantBombHelper::PLATFORM_PLAYSTATION,
+        // \App\GiantBombHelper::PLATFORM_PLAYSTATION_2,
+        // \App\GiantBombHelper::PLATFORM_SUPER_NINTENDO_ENTERTAINMENT_SYSTEM,
+    ];
+
+    $game_images = \App\GiantBombHelper::getGameImage($game_name, $platforms);
     $cover_url = $game_images['medium_url'];
     echo '<img src="' . $cover_url . '">';
 });

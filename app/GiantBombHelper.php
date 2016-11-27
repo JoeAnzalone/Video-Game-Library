@@ -134,6 +134,15 @@ class GiantBombHelper
 
         $games = json_decode($res->getBody(), true)['results'];
 
+        usort($games, function ($game1, $game2) use ($name) {
+            if (strtolower($game1['name']) === strtolower($game2['name'])) {
+                return 0;
+            }
+
+            if (strtolower($game2['name']) === strtolower($name)) {
+                return 1;
+            }
+        });
 
         if (!empty($platforms)) {
             foreach ($games as $index => &$game) {
@@ -188,10 +197,12 @@ class GiantBombHelper
 
         $game_image = $game['image'];
 
-        $releases = self::getReleasesByGameId($game['id'], $platforms);
+        if (!empty($platforms)) {
+            $releases = self::getReleasesByGameId($game['id'], $platforms);
 
-        if (!empty($releases[0]) && $releases[0]['image']) {
-            $game_image = $releases[0]['image'];
+            if (!empty($releases[0]) && $releases[0]['image']) {
+                $game_image = $releases[0]['image'];
+            }
         }
 
         return $game_image;
