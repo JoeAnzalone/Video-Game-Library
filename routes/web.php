@@ -1,5 +1,7 @@
 <?php
 
+use \App\GiantBombHelper;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +15,13 @@
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/cover/{game}', function ($game_name) {
+    $platforms = [GiantBombHelper::PLATFORM_PLAYSTATION, GiantBombHelper::PLATFORM_PLAYSTATION_2];
+    $game_images = GiantBombHelper::getGameImage($game_name, $platforms);
+    $cover_url = $game_images['medium_url'];
+    echo '<img src="' . $cover_url . '">';
 });
 
 Auth::routes();
