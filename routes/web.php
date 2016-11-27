@@ -24,7 +24,9 @@ Route::get('/cover/{game}', function ($game_name) {
         // \App\GiantBombHelper::PLATFORM_SUPER_NINTENDO_ENTERTAINMENT_SYSTEM,
     ];
 
-    $game_images = \App\GiantBombHelper::getGameImage($game_name, $platforms);
+    $regions = [\App\GiantBombHelper::REGION_UNITED_STATES];
+
+    $game_images = \App\GiantBombHelper::getGameImage($game_name, $platforms, $regions);
     $cover_url = $game_images['medium_url'];
     echo '<img src="' . $cover_url . '">';
 });

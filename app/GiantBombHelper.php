@@ -6,6 +6,11 @@ class GiantBombHelper
 {
     const BASE_API_URL = 'https://www.giantbomb.com/api/';
 
+    const REGION_UNITED_STATES = 1;
+    const REGION_UNITED_KINGDOM = 2;
+    const REGION_JAPAN = 6;
+    const REGION_AUSTRALIA = 11;
+
     const PLATFORM_AMIGA = 1;
     const PLATFORM_GAME_BOY = 3;
     const PLATFORM_GAME_BOY_ADVANCE = 4;
@@ -165,12 +170,16 @@ class GiantBombHelper
         return $games;
     }
 
-    public static function getReleasesByGameId($game_id, $platforms = null)
+    public static function getReleasesByGameId($game_id, $platforms = null, $regions = null)
     {
         $filter = 'game:' . $game_id;
 
         if (!empty($platforms)) {
             $filter .= ',platform:' . implode($platforms, '|');
+        }
+
+        if (!empty($regions)) {
+            $filter .= ',region:' . implode($regions, '|');
         }
 
         $res = self::makeRequest('releases/', [
@@ -181,10 +190,14 @@ class GiantBombHelper
         return json_decode($res->getBody(), true)['results'];
     }
 
-    public static function getGameImage($name, $platforms = null)
+    public static function getGameImage($name, $platforms = null, $regions = null)
     {
         if (!is_array($platforms)) {
             $platforms = [$platforms];
+        }
+
+        if (!is_array($regions)) {
+            $regions = [$regions];
         }
 
         $games = self::searchGame($name, $platforms);
@@ -198,7 +211,7 @@ class GiantBombHelper
         $game_image = $game['image'];
 
         if (!empty($platforms)) {
-            $releases = self::getReleasesByGameId($game['id'], $platforms);
+            $releases = self::getReleasesByGameId($game['id'], $platforms, $regions);
 
             if (!empty($releases[0]) && $releases[0]['image']) {
                 $game_image = $releases[0]['image'];
